@@ -9,9 +9,9 @@ function submitRate() {
   let rate = 1.00
   let amount = 0
   
-  years = inputYears.value
-  amount = inputAmount.value
-  rate = inputRate.value
+  years = parseFloat(inputYears.value)
+  amount = parseFloat(inputAmount.value)
+  rate = parseFloat(inputRate.value)
   
   for (let i = 0; i < years; i++) {
     result = result + amount
