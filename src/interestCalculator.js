@@ -14,8 +14,8 @@ function submitRate() {
   rate = inputRate.value
   
   for (let i = 0; i < years; i++) {
-    result += amount
-    result = result * (rate/100)
+    result = result + amount
+    result = (result * (rate/100)) + result
   }
   
   outputSummary.innerHTML = result
