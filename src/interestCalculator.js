@@ -10,4 +10,6 @@ function submitRate() {
     result += inputAmount.value
     result = result * (inputRate.value/100)
   }
+  
+  outputSummary.innerHTML = result
 }
