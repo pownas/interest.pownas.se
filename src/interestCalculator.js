@@ -24,5 +24,5 @@ function submitRate() {
     result = (result * (rate/100)) + result
   }
   
-  outputSummary.innerHTML = result
+  outputSummary.innerHTML = Math.round(result)
 }
