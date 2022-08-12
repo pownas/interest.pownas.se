@@ -5,13 +5,24 @@
   </head>
   <body>
     <h1>Ränta på ränta uträkning</h1>
-    <p>Belopp:</p>
-    <p><input id="amount" type="number" /></p>
-    <p>Ränta:</p>
-    <p><input id="rate" type="number" /></p>
-    <p>Antal år:</p>
-    <p><input id="years" type="number" /></p>
-    <p><button onclick="submitRate()">Beräkna</button></p>
+    <form>
+      <p>Belopp:</p>
+      <p><input id="amount" name="amount" type="number" /></p>
+      <p>
+        Insättning:
+        <input type="radio" id="once" name="howOften" value="once">
+        <label for="once">Engångs</label><br>
+        <input type="radio" id="yearly" name="howOften" value="yearly">
+        <label for="yearly">Årsvis</label><br>
+        <input type="radio" id="monthly" name="howOften" value="monthly">
+        <label for="monthly">Månadsvis</label>
+      </p>
+      <p>Ränta:</p>
+      <p><input id="rate" name="rate" type="number" /></p>
+      <p>Antal år:</p>
+      <p><input id="years" name="years" type="number" /></p>
+      <p><button onclick="submitRate()">Beräkna</button></p>
+    </form>
     <h2 id="summary"></h2>
     <script src="interestCalculator.js"></script>
   </body>
