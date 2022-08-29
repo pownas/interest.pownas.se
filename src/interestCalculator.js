@@ -3,6 +3,7 @@ function submitRate() {
   const inputRate = document.getElementById('rate')
   const inputYears = document.getElementById('years')
   const inputRadioOnce = document.getElementById('once')
+  const inputRadioWeekly = document.getElementById('weekly')
   const inputRadioMonthly = document.getElementById('monthly')
   const inputRadioYearly = document.getElementById('yearly')
   const outputSummary = document.getElementById('summary')
@@ -21,6 +22,9 @@ function submitRate() {
       result = result + amount
     if(inputRadioMonthly.checked)
       result = result + (amount*12)
+    if(inputRadioWeekly.checked)
+      result = result + (amount*52)
+    
     result = (result * (rate/100)) + result
   }
   
