@@ -10,33 +10,46 @@
   <title>Ränta på ränta uträkning</title>
 </head>
 <body>
-  <main>
-    <h1>Ränta på ränta uträkning</h1>
-      <!-- <form> -->
-        <div class="input-group mb-3">
-          <label for="amount" class="form-label">Belopp</label>
-          <input id="amount" type="number" class="form-control" placeholder="Recipient's username" aria-label="Recipient's username" aria-describedby="basic-addon2">
-          <span class="input-group-text" id="amount-end">,00 kr</span>
+  <div class="row">
+    <main class="col">
+      <h1>Ränta på ränta uträkning</h1>
+        <div>
+          <form>
+            <div class="input-group mb-3">
+              <label for="amount" class="form-label">Belopp</label>
+              <input id="amount" type="number" class="form-control" placeholder="Recipient's username" aria-label="Recipient's username" aria-describedby="basic-addon2">
+              <span class="input-group-text" id="amount-end">,00 kr</span>
+            </div>
+            <p>Insättning:</p>
+            <p>
+              <input type="radio" id="once" name="howOften" value="once">
+              <label for="once">Engångs</label><br />
+              <input type="radio" id="yearly" name="howOften" value="yearly">
+              <label for="yearly">Årsvis</label><br />
+              <input type="radio" id="monthly" name="howOften" value="monthly">
+              <label for="monthly">Månadsvis</label><br />
+              <input type="radio" id="weekly" name="howOften" value="weekly">
+              <label for="weekly">Veckovis</label>
+            </p>
+            <div class="input-group mb-3">
+              <label for="rate" class="form-label">Ränta</label>
+              <input id="rate" name="rate" type="number" />
+              <input type="range" class="form-range" min="0" max="50" step="0.5" id="rateRange">
+            </div>
+            <div class="input-group mb-3">
+              <label for="years" class="form-label">Antal år</label>
+              <input id="years" name="years" type="number" />
+              <input type="range" class="form-range" min="0" max="50" step="0.5" id="yearsRange">
+            </div>
+            <div><button onclick="submitRate()">Beräkna</button></div>
+          </form>
+          <h2 id="summary"></h2>
         </div>
-        <p>Insättning:</p>
-        <p>
-          <input type="radio" id="once" name="howOften" value="once">
-          <label for="once">Engångs</label><br />
-          <input type="radio" id="yearly" name="howOften" value="yearly">
-          <label for="yearly">Årsvis</label><br />
-          <input type="radio" id="monthly" name="howOften" value="monthly">
-          <label for="monthly">Månadsvis</label><br />
-          <input type="radio" id="weekly" name="howOften" value="weekly">
-          <label for="weekly">Veckovis</label>
-        </p>
-        <p>Ränta:</p>
-        <p><input id="rate" name="rate" type="number" /></p>
-        <p>Antal år:</p>
-        <p><input id="years" name="years" type="number" /></p>
-        <p><button onclick="submitRate()">Beräkna</button></p>
-      <!-- </form> -->
-    <h2 id="summary"></h2>
-    <script src="interestCalculator.js"></script>
-  </main>
+      <script src="interestCalculator.js"></script>
+    </main>
+    <aside id="graph" class="col-12 col-lg-8 col-md-6">
+      <div class="bg-success bg-gradient" width="5rem" height="3rem"></div>
+    </aside>
+  </div>
 </body>
 </html>
