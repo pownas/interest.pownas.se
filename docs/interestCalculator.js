@@ -13,6 +13,8 @@ let amount = 0
 let rate = 1.00
 let years = 1
 let frequency = "once"
+let xValues = []
+let yValues = []
 
 function getInputValues() {
   amount = parseFloat(inputAmount.value)
@@ -32,6 +34,8 @@ function getInputValues() {
 function submitRate() {
   result = 0
   getInputValues()
+
+  var resultData = []
   
   for (let i = 0; i < years; i++) {
     if(inputRadioYearly.checked || inputRadioOnce.checked && i < 1)
@@ -39,12 +43,15 @@ function submitRate() {
     if(inputRadioMonthly.checked)
       result = result + (amount*12)
     if(inputRadioWeekly.checked)
-      result = result + (amount*52)
-    
+      result = result + (amount*52) 
+
     result = (result * (rate/100)) + result
+
+    resultData.push(result)
   }
-  
   outputSummary.innerHTML = Math.round(result)
+
+  yValues = resultData
 
   saveToJSON()
 }
@@ -100,8 +107,53 @@ function saveToJSON() {
     'rate': rate,
     'years': years,
     'result': result,
+    'resultData': yValues,
   };
 
   //Lagrar ned jsonObject i localStorage med namnet: "savedJsonObject" på användarens dator. 
   localStorage.setItem('savedJsonObject', JSON.stringify(jsonObject));
 }
+
+
+
+// Visar grafen: 
+document.addEventListener("DOMContentLoaded", function () {
+
+  const jsonData = JSON.parse(localStorage.getItem('savedJsonObject'))
+
+  const ctx = document.getElementById('myChart');
+  let labels = [];
+
+  function getLabels(){
+    labels = []
+    for (let i = 1; i < jsonData.years+1; i++) {
+      labels.push("År " + i);
+    }
+    return labels
+  }
+
+  //Från: https://www.chartjs.org/docs/latest/charts/line.html#line-chart
+  const data = {
+    labels: getLabels(),
+    datasets: [{
+      label: 'Ränta på ränta',
+      data: jsonData.resultData,
+      fill: false,
+      borderColor: 'rgb(75, 192, 192)',
+      tension: 0.1
+    }]
+  };
+
+  //Från: https://www.chartjs.org/docs/latest/charts/line.html#stacked-area-chart
+  const stackedLine = new Chart(ctx, {
+    type: 'line',
+    data: data,
+    options: {
+        scales: {
+            y: {
+                stacked: true
+            }
+        }
+    }
+  });
+});
