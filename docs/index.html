@@ -7,6 +7,8 @@
   <link rel="icon" href="https://www.pownas.se/favicon.svg">
   <link href="https://assets.pownas.se/dist/bootstrap-5.3.0-alpha1/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://assets.pownas.se/css/site.css" rel="stylesheet" media="all">
+  <!--<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>-->
+  <script src="https://assets.pownas.se/dist/chart.js-v4.3.0/chart.js"></script>
   <title>Ränta på ränta uträkning</title>
 </head>
 <body>
@@ -61,7 +63,11 @@
       <script src="interestCalculator.js"></script>
     </main>
     <aside id="graph" class="col-12 col-lg-8 col-md-6">
-      <div class="bg-success bg-gradient" width="5rem" height="3rem"></div>
+      <div class="bg-success bg-gradient" width="5rem" height="3rem">        
+      </div>
+      <div>
+        <canvas id="myChart" width="400" height="400"></canvas>
+      </div>
     </aside>
   </div>
 </body>
