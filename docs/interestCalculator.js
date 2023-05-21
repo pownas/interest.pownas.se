@@ -61,7 +61,10 @@ function loadJsonToForm(getJson){
   inputRate.value = getJson.rate
   inputYears.value = getJson.years
   outputResult.value = getJson.result
-  outputSummary.innerHTML = String(Math.round(getJson.result)) + " kr"
+  outputSummary.innerHTML = (getJson.result).toLocaleString('sv-SE', {
+    style: 'currency',
+    currency: 'SEK',
+  })
   
   if(getJson.frequency == "once")
     inputRadioOnce.checked = true
