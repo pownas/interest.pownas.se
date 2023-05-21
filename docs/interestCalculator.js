@@ -12,14 +12,25 @@ let result = 0
 let amount = 0
 let rate = 1.00
 let years = 1
+let frequency = "once"
 
 function getInputValues() {
   amount = parseFloat(inputAmount.value)
   rate = parseFloat(inputRate.value)
   years = parseFloat(inputYears.value)
+
+  if(inputRadioYearly.checked)
+    frequency = "once"
+  if(inputRadioYearly.checked)
+    frequency = "yearly"
+  if(inputRadioMonthly.checked)
+    frequency = "monthly"
+  if(inputRadioWeekly.checked)
+    frequency = "weekly"
 }
 
 function submitRate() {
+  result = 0
   getInputValues()
   
   for (let i = 0; i < years; i++) {
@@ -50,7 +61,28 @@ function loadJsonToForm(getJson){
   inputRate.value = getJson.rate
   inputYears.value = getJson.years
   outputResult.value = getJson.result
-  outputSummary.innerHTML = Math.round(getJson.result)
+  outputSummary.innerHTML = String(Math.round(getJson.result)) + " kr"
+  
+  if(getJson.frequency == "once")
+    inputRadioOnce.checked = true
+  else
+    inputRadioOnce.checked = false
+  
+  if(getJson.frequency == "yearly")
+    inputRadioYearly.checked = true
+  else
+    inputRadioYearly.checked = false
+
+  if(getJson.frequency == "montly")
+    inputRadioMonthly.checked = true
+  else
+    inputRadioMonthly.checked = false
+
+  if(getJson.frequency == "weekly")
+    inputRadioWeekly.checked = true
+  else
+    inputRadioWeekly.checked = false
+  
 }
 
 function saveToJSON() { 
@@ -61,6 +93,7 @@ function saveToJSON() {
 
   var jsonObject = { 
     'amount': amount,
+    'frequency': frequency,
     'rate': rate,
     'years': years,
     'result': result,
