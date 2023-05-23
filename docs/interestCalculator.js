@@ -57,9 +57,10 @@ function submitForm() {
 
     resultData.push(result)
   }
-  outputSummary.innerHTML = Math.round(result).toLocaleString('sv-SE', {
+  outputSummary.innerHTML = result.toLocaleString('sv-SE', {
     style: 'currency',
     currency: 'SEK',
+    maximumFractionDigits: 0,
   })
 
   yValues = resultData
@@ -79,6 +80,7 @@ function loadJsonToForm(getJson){
   outputSummary.innerHTML = (getJson.result).toLocaleString('sv-SE', {
     style: 'currency',
     currency: 'SEK',
+    maximumFractionDigits: 0,
   })
 
   sliderRate.value = inputRate.value
