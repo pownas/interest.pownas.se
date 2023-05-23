@@ -176,6 +176,9 @@ document.addEventListener("DOMContentLoaded", function () {
       data: jsonData.resultData,
       fill: false,
       borderColor: 'rgb(75, 192, 192)',
+      pointStyle: 'rectRot', //'rectRot', 'triangle' or 'circle'
+      pointRadius: 10, //size
+      pointHoverRadius: 20, //hoverSize
       tension: 0.1
     }]
   };
