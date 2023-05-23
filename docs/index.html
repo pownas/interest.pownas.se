@@ -15,51 +15,59 @@
   <div class="row">
     <main class="col">
       <h1>Ränta på ränta uträkning</h1>
-        <div>
-          <form>
+        <div class="m-3">
+          <form class="row g-3">
             <div class="input-group mb-3">
-              <label for="amount" class="form-label">Belopp</label>
+              <label for="amount" class="input-group-text">Belopp</label>
               <input id="amount" name="amount" type="number" step="100" class="form-control">
               <span class="input-group-text" id="amount-end">kr</span>
             </div>
-            <p>Insättning:</p>
+            <label for="frequency" class="input-group-text">Insättning</label>
             <div class="input-group">
-              <div class="form-check">
+              <div class="m-2">
                 <input class="form-check-input" type="radio" id="once" name="frequency" value="once">
                 <label class="form-check-label" for="once">Engångs</label>
               </div>
-              <div>
+              <div class="m-2">
                 <input class="form-check-input" type="radio" id="yearly" name="frequency" value="yearly">
                 <label class="form-check-label" for="yearly">Årsvis</label>
               </div>
-              <div>
+              <div class="m-2">
                 <input class="form-check-input" type="radio" id="monthly" name="frequency" value="monthly">
                 <label class="form-check-label" for="monthly">Månadsvis</label><br />
               </div>
-              <div>
+              <div class="m-2">
                 <input class="form-check-input" type="radio" id="weekly" name="frequency" value="weekly">
                 <label class="form-check-label" for="weekly">Veckovis</label>
               </div>
             </div>
-            <div class="input-group mb-3">
-              <label for="rate" class="form-label">Ränta</label>
-              <input id="rate" name="rate" type="number" step="0.25" />
-              <span class="input-group-text">%</span>
-              <input type="range" aria-label="välj ränta" class="form-range" min="0" max="50" step="0.25" id="rateRange">
+            <div class="col-6">
+              <div class="input-group mb-3">
+                <label for="rate" class="input-group-text">Ränta</label>
+                <input class="form-control" id="rate" name="rate" type="number" step="0.25" />
+                <span class="input-group-text">%</span>
+              </div>
             </div>
-            <div class="input-group mb-3">
-              <label for="years" class="form-label">Antal år</label>
-              <input id="years" name="years" type="number" />
-              <span class="input-group-text">år</span>
-              <input type="range" aria-label="välj år" class="form-range" min="0" max="50" step="1" id="yearsRange">
+            <div class="col-6">
+              <input type="range" class="form-range mt-2" aria-label="välj ränta" min="0" max="25" step="0.25" id="rateRange">
+            </div>
+            <div class="col-6">
+              <div class="input-group mb-3">
+                <label for="years" class="input-group-text">Antal år</label>
+                <input class="form-control" id="years" name="years" type="number" />
+                <span class="input-group-text">år</span>
+              </div>
+            </div>
+            <div class="col-6">
+              <input type="range" class="form-range mt-2" aria-label="välj år" min="0" max="50" step="1" id="yearsRange">
             </div>
             <div>
               <input id="hiddenResult" name="hiddenResult" type="hidden" />
-              <button type="submit" onclick="submitForm()">Beräkna</button>
-              <button type="reset" onclick="resetForm()">Återställ</button>
+              <button type="submit" onclick="submitForm()" class="btn btn-primary">Beräkna</button>
+              <button type="reset" onclick="resetForm()" class="btn btn-secondary">Återställ</button>
             </div>
           </form>
-          <h2 id="summary"></h2>
+          <h2 id="summary" class="mt-4"></h2>
         </div>
       <script src="interestCalculator.js"></script>
     </main>
