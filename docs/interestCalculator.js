@@ -57,7 +57,10 @@ function submitForm() {
 
     resultData.push(result)
   }
-  outputSummary.innerHTML = Math.round(result)
+  outputSummary.innerHTML = Math.round(result).toLocaleString('sv-SE', {
+    style: 'currency',
+    currency: 'SEK',
+  })
 
   yValues = resultData
 
