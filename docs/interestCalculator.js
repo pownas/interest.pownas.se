@@ -83,7 +83,7 @@ function loadJsonToForm(getJson){
   else
     inputRadioYearly.checked = false
 
-  if(getJson.frequency == "montly")
+  if(getJson.frequency == "monthly")
     inputRadioMonthly.checked = true
   else
     inputRadioMonthly.checked = false
