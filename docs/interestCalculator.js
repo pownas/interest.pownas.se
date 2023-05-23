@@ -125,18 +125,26 @@ function saveToJSON() {
 
 sliderRate.oninput = function() {
   inputRate.value = sliderRate.value
+  submitForm()
 }
 
 inputRate.oninput = function() {
   sliderRate.value = inputRate.value
+  submitForm()
 }
 
 sliderYears.oninput = function() {
   inputYears.value = sliderYears.value
+  submitForm()
 }
 
 inputYears.oninput = function() {
   sliderYears.value = inputYears.value
+  submitForm()
+}
+
+inputAmount.oninput = function() {
+  submitForm()
 }
 
 // Visar grafen: 
