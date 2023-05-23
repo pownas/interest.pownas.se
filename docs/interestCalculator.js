@@ -7,6 +7,8 @@ const inputRadioMonthly = document.getElementById('monthly')
 const inputRadioYearly = document.getElementById('yearly')
 const outputResult = document.getElementById('hiddenResult')
 const outputSummary = document.getElementById('summary')
+const sliderRate = document.getElementById('rateRange');
+const sliderYears = document.getElementById('yearsRange');
 
 let result = 0
 let amount = 0
@@ -15,6 +17,12 @@ let years = 1
 let frequency = "once"
 let xValues = []
 let yValues = []
+
+var localJsonObject = JSON.parse(localStorage.getItem('savedJsonObject'));
+
+if (localJsonObject != null){
+  loadJsonToForm(localJsonObject)
+}
 
 function getInputValues() {
   amount = parseFloat(inputAmount.value)
@@ -31,7 +39,7 @@ function getInputValues() {
     frequency = "weekly"
 }
 
-function submitRate() {
+function submitForm() {
   result = 0
   getInputValues()
 
@@ -56,22 +64,22 @@ function submitRate() {
   saveToJSON()
 }
 
-
-var localJsonObject = JSON.parse(localStorage.getItem('savedJsonObject'));
-
-if (localJsonObject != null){
-  loadJsonToForm(localJsonObject)
+function resetForm() {
+  loadJsonToForm(JSON.parse(localStorage.getItem('savedJsonObject')))
 }
 
 function loadJsonToForm(getJson){
-  inputAmount.value = getJson.amount
-  inputRate.value = getJson.rate
-  inputYears.value = getJson.years
-  outputResult.value = getJson.result
+  inputAmount.value = getJson.amount != null ? getJson.amount : 0
+  inputRate.value = getJson.rate != null ? getJson.rate : 0
+  inputYears.value = getJson.years != null ? getJson.years : 0
+  outputResult.value = getJson.result != null ? getJson.result : 0
   outputSummary.innerHTML = (getJson.result).toLocaleString('sv-SE', {
     style: 'currency',
     currency: 'SEK',
   })
+
+  sliderRate.value = inputRate.value
+  sliderYears.value = inputYears.value
   
   if(getJson.frequency == "once")
     inputRadioOnce.checked = true
@@ -115,6 +123,21 @@ function saveToJSON() {
 }
 
 
+sliderRate.oninput = function() {
+  inputRate.value = sliderRate.value
+}
+
+inputRate.oninput = function() {
+  sliderRate.value = inputRate.value
+}
+
+sliderYears.oninput = function() {
+  inputYears.value = sliderYears.value
+}
+
+inputYears.oninput = function() {
+  sliderYears.value = inputYears.value
+}
 
 // Visar grafen: 
 document.addEventListener("DOMContentLoaded", function () {
