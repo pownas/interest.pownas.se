@@ -10,6 +10,11 @@
   <!--<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>-->
   <script src="https://assets.pownas.se/dist/chart.js-v4.3.0/chart.js"></script>
   <title>Ränta på ränta uträkning</title>
+  <style>
+    .infile-max-90-height{
+      max-height: 90dvh;
+    }
+  </style>
 </head>
 <body>
   <div class="row">
@@ -72,9 +77,7 @@
       <script src="interestCalculator.js"></script>
     </main>
     <aside id="graph" class="col-12 col-lg-8 col-md-6">
-      <div class="bg-success bg-gradient" width="5rem" height="3rem">        
-      </div>
-      <div>
+      <div class="infile-max-90-height">
         <canvas id="myChart" width="400" height="400"></canvas>
       </div>
     </aside>
