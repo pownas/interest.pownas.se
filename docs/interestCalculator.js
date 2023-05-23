@@ -5,24 +5,18 @@ const inputRadioOnce = document.getElementById('once')
 const inputRadioWeekly = document.getElementById('weekly')
 const inputRadioMonthly = document.getElementById('monthly')
 const inputRadioYearly = document.getElementById('yearly')
-const outputResult = document.getElementById('hiddenResult')
+const outputResult = document.getElementById('result')
 const outputSummary = document.getElementById('summary')
 const sliderRate = document.getElementById('rateRange');
 const sliderYears = document.getElementById('yearsRange');
 
-let result = 0
+let resultValue = 0
 let amount = 0
 let rate = 1.00
 let years = 1
 let frequency = "once"
 let xValues = []
 let yValues = []
-
-var localJsonObject = JSON.parse(localStorage.getItem('savedJsonObject'));
-
-if (localJsonObject != null){
-  loadJsonToForm(localJsonObject)
-}
 
 function getInputValues() {
   amount = parseFloat(inputAmount.value)
@@ -40,36 +34,33 @@ function getInputValues() {
 }
 
 function submitForm() {
-  result = 0
+  resultValue = 0
   getInputValues()
 
   var resultData = []
   
   for (let i = 0; i < years; i++) {
     if(inputRadioYearly.checked || inputRadioOnce.checked && i < 1)
-      result = result + amount
+      resultValue = resultValue + amount
     if(inputRadioMonthly.checked)
-      result = result + (amount*12)
+      resultValue = resultValue + (amount*12)
     if(inputRadioWeekly.checked)
-      result = result + (amount*52) 
+      resultValue = resultValue + (amount*52) 
 
-    result = (result * (rate/100)) + result
+    resultValue = (resultValue * (rate/100)) + resultValue
 
-    resultData.push(result)
+    resultData.push(resultValue)
   }
-  outputSummary.innerHTML = result.toLocaleString('sv-SE', {
+  outputSummary.innerHTML = resultValue.toLocaleString('sv-SE', {
     style: 'currency',
     currency: 'SEK',
     maximumFractionDigits: 0,
   })
 
+  outputResult.value = Math.round(resultValue)
   yValues = resultData
 
   saveToJSON()
-}
-
-function resetForm() {
-  loadJsonToForm(JSON.parse(localStorage.getItem('savedJsonObject')))
 }
 
 function loadJsonToForm(getJson){
@@ -119,7 +110,7 @@ function saveToJSON() {
     'frequency': frequency,
     'rate': rate,
     'years': years,
-    'result': result,
+    'result': resultValue,
     'resultData': yValues,
   };
 
@@ -155,11 +146,37 @@ inputAmount.oninput = function() {
 // Visar grafen: 
 document.addEventListener("DOMContentLoaded", function () {
 
+  //Källa: https://stackoverflow.com/questions/2907482/how-to-get-the-query-string-by-javascript/2907506#2907506
+  function getQueryStrings() { 
+    var assoc  = {};
+    var decode = function (s) { return decodeURIComponent(s.replace(/\+/g, " ")); };
+    var queryString = location.search.substring(1); 
+    var keyValues = queryString.split('&'); 
+  
+    for(var i in keyValues) { 
+      var key = keyValues[i].split('=');
+      if (key.length > 1) {
+        assoc[decode(key[0])] = decode(key[1]);
+      }
+    }
+  
+    return assoc;
+  }
+
+  var qs = getQueryStrings()
+  var shareParam = qs["share"]
+  
   const jsonData = JSON.parse(localStorage.getItem('savedJsonObject'))
 
+  if (shareParam === "true")
+    loadJsonToForm(qs)
+  else if (jsonData != null){
+    loadJsonToForm(jsonData)
+  }
+  
   const ctx = document.getElementById('myChart');
   let labels = [];
-
+  
   function getLabels(){
     labels = []
     for (let i = 1; i < jsonData.years+1; i++) {
@@ -188,11 +205,11 @@ document.addEventListener("DOMContentLoaded", function () {
     type: 'line',
     data: data,
     options: {
-        scales: {
-            y: {
-                stacked: true
-            }
+      scales: {
+        y: {
+          stacked: true
         }
+      }
     }
   });
 });
