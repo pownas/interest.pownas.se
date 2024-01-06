@@ -7,6 +7,7 @@ const inputRadioMonthly = document.getElementById('monthly')
 const inputRadioYearly = document.getElementById('yearly')
 const outputResult = document.getElementById('hiddenResult')
 const outputSummary = document.getElementById('summary')
+const outputResultDataTable = document.getElementById('resultTable');
 const sliderRate = document.getElementById('rateRange');
 const sliderYears = document.getElementById('yearsRange');
 
@@ -152,6 +153,75 @@ inputAmount.oninput = function() {
   submitForm()
 }
 
+
+// Create a HTML-table for jsonData and visualize it in outputResultDataTable 
+function createDataTable() {
+  const jsonData = JSON.parse(localStorage.getItem('savedJsonObject'))
+
+  let table = document.createElement('table');
+  table.classList.add('table');
+  table.classList.add('table-striped');
+
+  let tableBody = document.createElement('tbody');
+
+  let tableHead = document.createElement('thead');
+  tableBody.appendChild(tableHead);
+
+  let tableHeadRow = document.createElement('tr');
+  tableBody.appendChild(tableHeadRow);
+
+  let tableHeadRowYear = document.createElement('th');
+  tableHeadRowYear.appendChild(document.createTextNode("År"));
+  tableBody.appendChild(tableHeadRowYear);
+
+  let tableHeadRowData = document.createElement('th');
+  tableHeadRowData.appendChild(document.createTextNode("Belopp"));
+  tableBody.appendChild(tableHeadRowData);
+
+  let tableHeadRowInterest = document.createElement('th');
+  tableHeadRowInterest.appendChild(document.createTextNode("Ränta-på-ränta"));
+  tableBody.appendChild(tableHeadRowInterest);
+
+  for (let i = 0; i < jsonData.years; i++) {
+    let tableRow = document.createElement('tr');
+    let tableRowData = document.createElement('td');
+    tableRowData.appendChild(document.createTextNode("År " + (i+1)));
+    
+    let resultData = document.createElement('td');
+    let resultCurrency = jsonData.resultData[i].toLocaleString('sv-SE', {
+      style: 'currency',
+      currency: 'SEK',
+      maximumFractionDigits: 0,
+    })
+    resultData.appendChild(document.createTextNode(resultCurrency));
+
+    let resultInterest = document.createElement('td');
+    let dataInterest = jsonData.resultData[i] - jsonData.amount;
+    let resultInterestCurrency = dataInterest.toLocaleString('sv-SE', {
+      style: 'currency',
+      currency: 'SEK',
+      maximumFractionDigits: 0,
+    })
+    resultInterest.appendChild(document.createTextNode(resultInterestCurrency));
+    
+    tableRow.appendChild(tableRowData);
+    tableRow.appendChild(resultData);
+    tableRow.appendChild(resultInterest);
+
+    tableBody.appendChild(tableRow);
+  }
+  table.appendChild(tableBody);
+
+  // Check if outputResultDataTable exists before setting innerHTML
+  if (outputResultDataTable) {
+    outputResultDataTable.innerHTML = table.outerHTML;
+  } else {
+    console.error("outputResultDataTable element not found.");
+  }
+
+  console.log(table.outerHTML);
+}
+
 // Visar grafen: 
 document.addEventListener("DOMContentLoaded", function () {
 
@@ -195,4 +265,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
   });
+
+  // Skapar resultat-tabellen
+  createDataTable();
 });
