@@ -1,3 +1,4 @@
+const inputStartingAmount = document.getElementById('startingAmount')
 const inputAmount = document.getElementById('amount')
 const inputRate = document.getElementById('rate')
 const inputYears = document.getElementById('years')
@@ -12,6 +13,7 @@ const sliderRate = document.getElementById('rateRange');
 const sliderYears = document.getElementById('yearsRange');
 
 let result = 0
+let startingAmount = 0
 let amount = 0
 let rate = 1.00
 let years = 1
@@ -26,6 +28,7 @@ if (localJsonObject != null){
 }
 
 function getInputValues() {
+  startingAmount = parseFloat(inputStartingAmount.value)
   amount = parseFloat(inputAmount.value)
   rate = parseFloat(inputRate.value)
   years = parseFloat(inputYears.value)
@@ -43,11 +46,13 @@ function getInputValues() {
 function submitForm() {
   getInputValues();
 
+  result = startingAmount;
   let resultData = [];
   let interest = 0;
 
   for (let i = 0; i < years; i++) {
-    if(inputRadioYearly.checked || (inputRadioOnce.checked && i < 1))
+    (inputRadioOnce.checked && i < 1) ? result = startingAmount : result = result;
+    if(inputRadioYearly.checked)
       result = result + amount;
     if(inputRadioMonthly.checked)
       result = result + (amount*12);
@@ -70,7 +75,7 @@ function submitForm() {
 
   yValues = resultData;
 
-  saveToJSON()
+  saveToJSON();
 }
 
 function resetForm() {
@@ -78,6 +83,7 @@ function resetForm() {
 }
 
 function loadJsonToForm(getJson){
+  inputStartingAmount.value = getJson.startingAmount != null ? getJson.startingAmount : 0
   inputAmount.value = getJson.amount != null ? getJson.amount : 0
   inputRate.value = getJson.rate != null ? getJson.rate : 0
   inputYears.value = getJson.years != null ? getJson.years : 0
@@ -115,11 +121,13 @@ function loadJsonToForm(getJson){
 
 function saveToJSON() { 
   getInputValues()
+  startingAmount = parseFloat(inputStartingAmount.value)
   amount = parseFloat(inputAmount.value)
   rate = parseFloat(inputRate.value)
   years = parseFloat(inputYears.value)
 
   var jsonObject = { 
+    'startingAmount': startingAmount,
     'amount': amount,
     'frequency': frequency,
     'rate': rate,
