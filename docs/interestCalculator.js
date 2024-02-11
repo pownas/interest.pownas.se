@@ -255,6 +255,7 @@ document.addEventListener("DOMContentLoaded", function () {
   const jsonData = JSON.parse(localStorage.getItem('savedJsonObject'))
 
   const ctx = document.getElementById('myChart');
+  const ctxYearly = document.getElementById('yearlyChart');
   let labels = [];
 
   function getLabels(){
@@ -268,31 +269,70 @@ document.addEventListener("DOMContentLoaded", function () {
   //Från: https://www.chartjs.org/docs/latest/charts/line.html#line-chart
   const data = {
     labels: getLabels(),
-    datasets: [{
-      label: 'Ränta på ränta',
-      data: jsonData.resultData.map(x => x.total),
-      fill: false,
-      borderColor: 'rgb(75, 192, 192)',
-      pointStyle: 'rectRot', //'rectRot', 'triangle' or 'circle'
-      pointRadius: 10, //size
-      pointHoverRadius: 20, //hoverSize
-      tension: 0.1
-    },{
-      label: 'Insatt belopp',
-      data: jsonData.resultData.map(x => x.depositedAmount),
-      fill: false,
-      borderColor: 'rgb(240, 192, 192)',
-      pointStyle: 'rectRot', //'rectRot', 'triangle' or 'circle'
-      pointRadius: 10, //size
-      pointHoverRadius: 20, //hoverSize
-      tension: 0.1
-    }]
+    datasets: [
+      {
+        label: 'Ränta på ränta',
+        data: jsonData.resultData.map(x => x.total),
+        fill: false,
+        borderColor: 'rgb(75, 192, 192)',
+        pointStyle: 'rectRot', //'rectRot', 'triangle' or 'circle'
+        pointRadius: 10, //size
+        pointHoverRadius: 20, //hoverSize
+        tension: 0.1
+      },{
+        label: 'Insatt belopp',
+        data: jsonData.resultData.map(x => x.depositedAmount),
+        fill: false,
+        borderColor: 'rgb(240, 192, 192)',
+        pointStyle: 'rectRot', //'rectRot', 'triangle' or 'circle'
+        pointRadius: 10, //size
+        pointHoverRadius: 20, //hoverSize
+        tension: 0.1
+      }
+    ]
+  };
+
+  const yearlyData = {
+    labels: getLabels(),
+    datasets: [
+      {
+        label: 'Årets insättning',
+        data: jsonData.amount,
+        fill: false,
+        borderColor: 'rgb(75, 192, 192)',
+        pointStyle: 'rectRot', //'rectRot', 'triangle' or 'circle'
+        pointRadius: 10, //size
+        pointHoverRadius: 20, //hoverSize
+        tension: 0.1
+      },{
+        label: 'Årets ränta',
+        data: jsonData.resultData.map(x => x.yearlyInterest),
+        fill: false,
+        borderColor: 'rgb(240, 192, 192)',
+        pointStyle: 'rectRot', //'rectRot', 'triangle' or 'circle'
+        pointRadius: 10, //size
+        pointHoverRadius: 20, //hoverSize
+        tension: 0.1
+      }
+    ]
   };
 
   //Från: https://www.chartjs.org/docs/latest/charts/line.html#stacked-area-chart
   const stackedLine = new Chart(ctx, {
     type: 'line',
     data: data,
+    options: {
+        scales: {
+            y: {
+                stacked: false
+            }
+        }
+    }
+  });
+
+  new Chart(ctxYearly, {
+    type: 'line',
+    data: yearlyData,
     options: {
         scales: {
             y: {
