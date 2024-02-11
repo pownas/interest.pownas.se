@@ -62,7 +62,14 @@ function submitForm() {
     interest = result * (rate/100);
 
     result = result + interest;
-    deposit = amount * (i+1);
+
+    (inputRadioOnce.checked && i < 1) ? deposit = startingAmount : deposit = deposit;
+    if(inputRadioYearly.checked)
+      deposit = startingAmount + (amount * i);
+    if(inputRadioMonthly.checked)
+      deposit = startingAmount + (amount * 12 * i);
+    if(inputRadioWeekly.checked)
+      deposit = startingAmount + (amount * 52 * i);
 
     resultData.push({total: result, depositedAmount: deposit, yearlyInterest: interest, totalInterest: result - deposit});
   }
