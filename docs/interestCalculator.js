@@ -45,7 +45,6 @@ function submitForm() {
   getInputValues();
 
   let resultData = [];
-  let previousResult = 0;
 
   for (let i = 0; i < years; i++) {
     if(inputRadioYearly.checked || (inputRadioOnce.checked && i < 1))
@@ -55,11 +54,9 @@ function submitForm() {
     if(inputRadioWeekly.checked)
       result = result + (amount*52);
 
-    result = (result * (rate/100)) + result;
+    let interest = result * (rate/100);
 
-    
-    let interest = result - previousResult;
-    previousResult = result;
+    result = result + interest;
 
     resultData.push({total: result, interest: interest});
   }
