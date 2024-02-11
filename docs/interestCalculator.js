@@ -17,7 +17,7 @@ let rate = 1.00
 let years = 1
 let frequency = "once"
 let xValues = []
-let yValues = []
+let yValues = [{total: 0, interest: 0}]
 
 var localJsonObject = JSON.parse(localStorage.getItem('savedJsonObject'));
 
@@ -41,30 +41,36 @@ function getInputValues() {
 }
 
 function submitForm() {
-  result = 0
-  getInputValues()
+  let result = 0;
+  getInputValues();
 
-  var resultData = []
-  
+  let resultData = [];
+  let previousResult = 0;
+
   for (let i = 0; i < years; i++) {
-    if(inputRadioYearly.checked || inputRadioOnce.checked && i < 1)
-      result = result + amount
+    if(inputRadioYearly.checked || (inputRadioOnce.checked && i < 1))
+      result = result + amount;
     if(inputRadioMonthly.checked)
-      result = result + (amount*12)
+      result = result + (amount*12);
     if(inputRadioWeekly.checked)
-      result = result + (amount*52) 
+      result = result + (amount*52);
 
-    result = (result * (rate/100)) + result
+    result = (result * (rate/100)) + result;
 
-    resultData.push(result)
+    
+    let interest = result - previousResult;
+    previousResult = result;
+
+    resultData.push({total: result, interest: interest});
   }
+
   outputSummary.innerHTML = result.toLocaleString('sv-SE', {
     style: 'currency',
     currency: 'SEK',
     maximumFractionDigits: 0,
-  })
+  });
 
-  yValues = resultData
+  yValues = resultData;
 
   saveToJSON()
 }
@@ -187,26 +193,25 @@ function createDataTable() {
     let tableRowData = document.createElement('td');
     tableRowData.appendChild(document.createTextNode("År " + (i+1)));
     
-    let resultData = document.createElement('td');
-    let resultCurrency = jsonData.resultData[i].toLocaleString('sv-SE', {
+    let tdResultData = document.createElement('td');
+    let resultCurrency = jsonData.resultData[i].total.toLocaleString('sv-SE', {
       style: 'currency',
       currency: 'SEK',
       maximumFractionDigits: 0,
     })
-    resultData.appendChild(document.createTextNode(resultCurrency));
+    tdResultData.appendChild(document.createTextNode(resultCurrency));
 
-    let resultInterest = document.createElement('td');
-    let dataInterest = jsonData.resultData[i] - jsonData.amount;
-    let resultInterestCurrency = dataInterest.toLocaleString('sv-SE', {
+    let tdResultInterest = document.createElement('td');
+    let resultInterestCurrency = jsonData.resultData[i].interest.toLocaleString('sv-SE', {
       style: 'currency',
       currency: 'SEK',
       maximumFractionDigits: 0,
     })
-    resultInterest.appendChild(document.createTextNode(resultInterestCurrency));
+    tdResultInterest.appendChild(document.createTextNode(resultInterestCurrency));
     
     tableRow.appendChild(tableRowData);
-    tableRow.appendChild(resultData);
-    tableRow.appendChild(resultInterest);
+    tableRow.appendChild(tdResultData);
+    tableRow.appendChild(tdResultInterest);
 
     tableBody.appendChild(tableRow);
   }
