@@ -17,7 +17,7 @@ let rate = 1.00
 let years = 1
 let frequency = "once"
 let xValues = []
-let yValues = [{total: 0, interest: 0}]
+let yValues = [{total: 0, depositedAmount: 0, yearlyInterest: 0, totalInterest: 0}]
 
 var localJsonObject = JSON.parse(localStorage.getItem('savedJsonObject'));
 
@@ -41,10 +41,10 @@ function getInputValues() {
 }
 
 function submitForm() {
-  let result = 0;
   getInputValues();
 
   let resultData = [];
+  let interest = 0;
 
   for (let i = 0; i < years; i++) {
     if(inputRadioYearly.checked || (inputRadioOnce.checked && i < 1))
@@ -54,11 +54,12 @@ function submitForm() {
     if(inputRadioWeekly.checked)
       result = result + (amount*52);
 
-    let interest = result * (rate/100);
+    interest = result * (rate/100);
 
     result = result + interest;
+    deposit = amount * (i+1);
 
-    resultData.push({total: result, interest: interest});
+    resultData.push({total: result, depositedAmount: deposit, yearlyInterest: interest, totalInterest: result - deposit});
   }
 
   outputSummary.innerHTML = result.toLocaleString('sv-SE', {
@@ -178,12 +179,20 @@ function createDataTable() {
   tableBody.appendChild(tableHeadRowYear);
 
   let tableHeadRowData = document.createElement('th');
-  tableHeadRowData.appendChild(document.createTextNode("Belopp"));
+  tableHeadRowData.appendChild(document.createTextNode("Totalt belopp"));
   tableBody.appendChild(tableHeadRowData);
 
+  let tableHeadRowDeposits = document.createElement('th');
+  tableHeadRowDeposits.appendChild(document.createTextNode("Insatt belopp"));
+  tableBody.appendChild(tableHeadRowDeposits);
+
   let tableHeadRowInterest = document.createElement('th');
-  tableHeadRowInterest.appendChild(document.createTextNode("Ränta-på-ränta"));
+  tableHeadRowInterest.appendChild(document.createTextNode("Total ränta"));
   tableBody.appendChild(tableHeadRowInterest);
+
+  let tableHeadRowYearlyInterest = document.createElement('th');
+  tableHeadRowYearlyInterest.appendChild(document.createTextNode("Årets ränta"));
+  tableBody.appendChild(tableHeadRowYearlyInterest);
 
   for (let i = 0; i < jsonData.years; i++) {
     let tableRow = document.createElement('tr');
@@ -198,17 +207,35 @@ function createDataTable() {
     })
     tdResultData.appendChild(document.createTextNode(resultCurrency));
 
-    let tdResultInterest = document.createElement('td');
-    let resultInterestCurrency = jsonData.resultData[i].interest.toLocaleString('sv-SE', {
+    let tdDepositedAmountData = document.createElement('td');
+    let depositCurrency = jsonData.resultData[i].depositedAmount.toLocaleString('sv-SE', {
       style: 'currency',
       currency: 'SEK',
       maximumFractionDigits: 0,
     })
-    tdResultInterest.appendChild(document.createTextNode(resultInterestCurrency));
+    tdDepositedAmountData.appendChild(document.createTextNode(depositCurrency));
+
+    let tdResultTotalInterest = document.createElement('td');
+    let resultTotalInterestCurrency = jsonData.resultData[i].totalInterest.toLocaleString('sv-SE', {
+      style: 'currency',
+      currency: 'SEK',
+      maximumFractionDigits: 0,
+    })
+    tdResultTotalInterest.appendChild(document.createTextNode(resultTotalInterestCurrency));
     
+    let tdResultYearlyInterest = document.createElement('td');
+    let resultYearlyInterestCurrency = jsonData.resultData[i].yearlyInterest.toLocaleString('sv-SE', {
+      style: 'currency',
+      currency: 'SEK',
+      maximumFractionDigits: 0,
+    })
+    tdResultYearlyInterest.appendChild(document.createTextNode(resultYearlyInterestCurrency));
+
     tableRow.appendChild(tableRowData);
     tableRow.appendChild(tdResultData);
-    tableRow.appendChild(tdResultInterest);
+    tableRow.appendChild(tdDepositedAmountData);
+    tableRow.appendChild(tdResultTotalInterest);
+    tableRow.appendChild(tdResultYearlyInterest);
 
     tableBody.appendChild(tableRow);
   }
@@ -220,8 +247,6 @@ function createDataTable() {
   } else {
     console.error("outputResultDataTable element not found.");
   }
-
-  console.log(table.outerHTML);
 }
 
 // Visar grafen: 
@@ -245,9 +270,18 @@ document.addEventListener("DOMContentLoaded", function () {
     labels: getLabels(),
     datasets: [{
       label: 'Ränta på ränta',
-      data: jsonData.resultData,
+      data: jsonData.resultData.map(x => x.total),
       fill: false,
       borderColor: 'rgb(75, 192, 192)',
+      pointStyle: 'rectRot', //'rectRot', 'triangle' or 'circle'
+      pointRadius: 10, //size
+      pointHoverRadius: 20, //hoverSize
+      tension: 0.1
+    },{
+      label: 'Insatt belopp',
+      data: jsonData.resultData.map(x => x.depositedAmount),
+      fill: false,
+      borderColor: 'rgb(240, 192, 192)',
       pointStyle: 'rectRot', //'rectRot', 'triangle' or 'circle'
       pointRadius: 10, //size
       pointHoverRadius: 20, //hoverSize
@@ -262,7 +296,7 @@ document.addEventListener("DOMContentLoaded", function () {
     options: {
         scales: {
             y: {
-                stacked: true
+                stacked: false
             }
         }
     }
