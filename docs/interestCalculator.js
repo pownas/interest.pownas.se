@@ -51,8 +51,7 @@ function submitForm() {
   let interest = 0;
 
   for (let i = 0; i < years; i++) {
-    (inputRadioOnce.checked && i < 1) ? result = startingAmount : result = result;
-    if(inputRadioYearly.checked)
+    if(inputRadioYearly.checked || (inputRadioOnce.checked && i < 1))
       result = result + amount;
     if(inputRadioMonthly.checked)
       result = result + (amount*12);
@@ -63,8 +62,7 @@ function submitForm() {
 
     result = result + interest;
 
-    (inputRadioOnce.checked && i < 1) ? deposit = startingAmount : deposit = deposit;
-    if(inputRadioYearly.checked)
+    if(inputRadioYearly.checked || (inputRadioOnce.checked && i < 1))
       deposit = startingAmount + (amount * i);
     if(inputRadioMonthly.checked)
       deposit = startingAmount + (amount * 12 * i);
