@@ -19,7 +19,7 @@ let rate = 1.00
 let years = 1
 let frequency = "once"
 let xValues = []
-let yValues = [{total: 0, depositedAmount: 0, yearlyInterest: 0, totalInterest: 0}]
+let yValues = [{total: 0, depositedAmount: 0, yearlyInterest: 0, yearlyDeposit: 0, totalInterest: 0}]
 
 var localJsonObject = JSON.parse(localStorage.getItem('savedJsonObject'));
 
@@ -50,26 +50,23 @@ function submitForm() {
   let resultData = [];
   let interest = 0;
 
-  for (let i = 0; i < years; i++) {
-    if(inputRadioYearly.checked || (inputRadioOnce.checked && i < 1))
-      result = result + amount;
-    if(inputRadioMonthly.checked)
-      result = result + (amount*12);
-    if(inputRadioWeekly.checked)
-      result = result + (amount*52);
+  for (let i = 1; i < years + 1; i++) {
+    let times = 0;
 
+    if(inputRadioYearly.checked || (inputRadioOnce.checked && i < 1)){
+      times = 1;
+    } else if(inputRadioMonthly.checked){
+      times = 12;
+    } else if(inputRadioWeekly.checked){
+      times = 52;
+    }
+
+    deposit = startingAmount + (amount * times * i);
+    result = result + (amount*times);
     interest = result * (rate/100);
-
     result = result + interest;
 
-    if(inputRadioYearly.checked || (inputRadioOnce.checked && i < 1))
-      deposit = startingAmount + (amount * i);
-    if(inputRadioMonthly.checked)
-      deposit = startingAmount + (amount * 12 * i);
-    if(inputRadioWeekly.checked)
-      deposit = startingAmount + (amount * 52 * i);
-
-    resultData.push({total: result, depositedAmount: deposit, yearlyInterest: interest, totalInterest: result - deposit});
+    resultData.push({total: result, depositedAmount: deposit, yearlyInterest: interest, yearlyDeposit: (amount*times), totalInterest: result - deposit});
   }
 
   outputSummary.innerHTML = result.toLocaleString('sv-SE', {
@@ -310,7 +307,7 @@ document.addEventListener("DOMContentLoaded", function () {
     datasets: [
       {
         label: 'Årets insättning',
-        data: jsonData.amount,
+        data: jsonData.resultData.map(x => x.yearlyDeposit),
         fill: false,
         borderColor: 'rgb(75, 192, 192)',
         pointStyle: 'rectRot', //'rectRot', 'triangle' or 'circle'
